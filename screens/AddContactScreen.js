@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, Switch } from 'react-native';
+
 import * as Contacts from 'expo-contacts';
+
 import CustomizableButton from '../components/CustomizableButton';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { DatabaseConnection } from '../database/database-connect';
+
+const db = DatabaseConnection.getConnection();
 
 export default function AddContactScreen() {
-    /* useEffect(() => {
-      (async () => {
-        const { status } = await Contacts.requestPermissionsAsync();
-        if (status === 'granted') {
-          const { data } = await Contacts.getContactsAsync({});
-  
-          if (data.length > 0) {
-            const contact = data[0];
-            console.log(Object.keys(contact))
-            setInitialContact(contact);
-          }
-        }
-      })();
-    }, []); */
+    useEffect(() => {
+        DatabaseConnection.dropTableTestable(db);
+        DatabaseConnection.createContactTable(db);
 
-    // App-specific states //
+        // FIXME - ONLY FOR TESTING PURPOSES - REWORK LATER
+
+        const data = {
+            firstName: "Josipa",
+            lastName: "Mrša",
+            phoneNumber: "0914444555"
+        }
+
+        DatabaseConnection.addContact(db, data);
+        DatabaseConnection.viewContacts(db);
+    }, []);
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -28,10 +33,9 @@ export default function AddContactScreen() {
     const [description, setDescription] = useState("");
     const [isTemporary, setIsTemporary] = useState(true);
    
-    // Dropdown component //
-    const [open, setOpen] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState(false);
     const [keepFor, setKeepFor] = useState("");
-    const [items, setItems] = useState([
+    const [keepItemValues, setKeepItemValues] = useState([
         { label: 'One day', value: 'day' },
         { label: 'One week', value: 'week' },
         { label: 'One month', value: 'month' }
@@ -60,10 +64,6 @@ export default function AddContactScreen() {
     const handleIsTemporary = () => {
         setIsTemporary(previousState => !previousState);
     }
-
-    /* const handleKeepFor = (data) => {
-        setKeepFor(data);
-    } */
 
     const saveContact = () => {
         let newContact = {
@@ -133,12 +133,12 @@ export default function AddContactScreen() {
             {isTemporary && <View style={styles.contactLengthArea}>
                 <Text>Keep contact for</Text>
                 <DropDownPicker
-                    open={open}
+                    open={openDropdown}
                     value={keepFor}
-                    items={items}
-                    setOpen={setOpen}
+                    items={keepItemValues}
+                    setOpen={setOpenDropdown}
                     setValue={setKeepFor}
-                    setItems={setItems}
+                    setItems={setKeepItemValues}
                 />
             </View>}
 
