@@ -7,34 +7,36 @@ import CustomizableButton from '../components/CustomizableButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DatabaseConnection } from '../database/database-connect';
 
+// FIXME - TEMPORARY UNTIL NAVIGATION
+import ViewContactsScreen from './ViewContactsScreen';
+
 const db = DatabaseConnection.getConnection();
 
 export default function AddContactScreen() {
+    // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
     useEffect(() => {
         DatabaseConnection.dropTableTestable(db);
         DatabaseConnection.createContactTable(db);
-
-        // FIXME - ONLY FOR TESTING PURPOSES - REWORK LATER
-
-        const data = {
-            firstName: "Josipa",
-            lastName: "Mrša",
-            phoneNumber: "0914444555"
-        }
-
-        DatabaseConnection.addContact(db, data);
-        DatabaseConnection.viewContacts(db);
     }, []);
 
-    const [firstName, setFirstName] = useState("");
+    /* const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
+    const [isTemporary, setIsTemporary] = useState(true); */
+
+    const [firstName, setFirstName] = useState("Josipa");
+    const [lastName, setLastName] = useState("Mrša");
+    const [phoneNumber, setPhoneNumber] = useState("0915554444");
+    const [location, setLocation] = useState("Split");
+    const [description, setDescription] = useState("Temporary contact");
     const [isTemporary, setIsTemporary] = useState(true);
-   
+
+    const [fullContacts, setFullContacts] = useState([]);
+
     const [openDropdown, setOpenDropdown] = useState(false);
-    const [keepFor, setKeepFor] = useState("");
+    const [keepFor, setKeepFor] = useState("week");
     const [keepItemValues, setKeepItemValues] = useState([
         { label: 'One day', value: 'day' },
         { label: 'One week', value: 'week' },
@@ -76,7 +78,9 @@ export default function AddContactScreen() {
             keepFor
         }
 
-        console.log(newContact);
+        let res = DatabaseConnection.addContact(db, newContact);
+        DatabaseConnection.viewContacts(db, setFullContacts);
+        //console.log(fullContacts[0].first_name);
     }
 
     return (
@@ -146,6 +150,14 @@ export default function AddContactScreen() {
                 button={styles.button}
                 description={"Save contact"}
                 action={() => { saveContact() }} />
+
+            <View>
+                {fullContacts.map((fc, i) => {
+                    return (
+                        <Text key={i}>{fc.firstName} {fc.lastName}</Text>
+                    )
+                })}
+            </View>
         </View>
     );
 }
