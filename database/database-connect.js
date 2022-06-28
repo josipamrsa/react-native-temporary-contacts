@@ -51,6 +51,22 @@ const errHandler = (err) => {
 const transformKeys = (obj) => {
     let transformed = {};
 
+    /* 
+    
+        Before you forget about this project for like 3 years, here is a quick explanation why this abomination exists:
+
+            > Basically, I didn't like the snake_case of object props so I turned it into camelCase for ease of use
+            > All objects retrieved from database will have snake_case style of writing for their properties
+            > Knowing this, we split all props of object by the special character, take the first element and leave it
+              lowercase, while turning all other elements to uppercase
+            > We select the first element and then attach the rest, using the slice function which in the first part returns only
+              the very first element, and in the second part returns all without the first element
+            > Elements returned in second part are then transformed to have their first letter turn uppercase, and then this 
+              letter is joined with the rest of the letters of the element
+            > After that, a newly transformed key is used for a new object, which now contains the new key and the old value 
+    
+    */
+
     Object.keys(obj).forEach(o => {
         // Do your eyes hurt yet :D
         let newKey = o.split("_")[0] + o.split("_").slice(1).map(el => el.charAt(0).toUpperCase() + el.slice(1)).join("");

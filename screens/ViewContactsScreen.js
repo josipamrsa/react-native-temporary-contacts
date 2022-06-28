@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
+
 import * as Contacts from 'expo-contacts';
 
-export default function ViewContactsScreen() {
+export default function ViewContactsScreen({ navigation }) {
   /* useEffect(() => {
   (async () => {
     const { status } = await Contacts.requestPermissionsAsync();
@@ -19,7 +20,7 @@ export default function ViewContactsScreen() {
 }, []); */
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text>view added contacts</Text>
     </View>
   );
@@ -28,7 +29,6 @@ export default function ViewContactsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     margin: '5%',

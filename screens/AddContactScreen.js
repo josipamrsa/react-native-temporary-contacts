@@ -7,12 +7,9 @@ import CustomizableButton from '../components/CustomizableButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DatabaseConnection } from '../database/database-connect';
 
-// FIXME - TEMPORARY UNTIL NAVIGATION
-import ViewContactsScreen from './ViewContactsScreen';
-
 const db = DatabaseConnection.getConnection();
 
-export default function AddContactScreen() {
+export default function AddContactScreen({ navigation }) {
     // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
     useEffect(() => {
         DatabaseConnection.dropTableTestable(db);
@@ -33,6 +30,7 @@ export default function AddContactScreen() {
     const [description, setDescription] = useState("Temporary contact");
     const [isTemporary, setIsTemporary] = useState(true);
 
+    // FIXME - TESTING PURPOSES
     const [fullContacts, setFullContacts] = useState([]);
 
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -85,8 +83,6 @@ export default function AddContactScreen() {
 
     return (
         <View style={styles.container}>
-            <Text>Add a contact</Text>
-
             <TextInput
                 placeholder="First name"
                 value={firstName}
@@ -164,7 +160,9 @@ export default function AddContactScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        width: "80%",
+        flex: 1,
+        justifyContent: "center",
+        margin: '5%',
     },
 
     button: {
