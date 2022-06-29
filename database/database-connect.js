@@ -85,6 +85,10 @@ const viewAllContacts = (db, setter) => {
             VIEW_ALL_TABLE_CONTACT,
             [],
             (tx, results) => {
+                if (results.rows.length === 0) {
+                    createTable(db);
+                }
+                
                 let tmp = [];
                 for (let i = 0; i < results.rows.length; i++) {
                     tmp.push(transformKeys(results.rows.item(i)));

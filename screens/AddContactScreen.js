@@ -10,12 +10,6 @@ import { DatabaseConnection } from '../database/database-connect';
 const db = DatabaseConnection.getConnection();
 
 export default function AddContactScreen({ navigation }) {
-    // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
-    useEffect(() => {
-        DatabaseConnection.dropTableTestable(db);
-        DatabaseConnection.createContactTable(db);
-    }, []);
-
     /* const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -30,9 +24,6 @@ export default function AddContactScreen({ navigation }) {
     const [description, setDescription] = useState("Temporary contact");
     const [isTemporary, setIsTemporary] = useState(true);
 
-    // FIXME - TESTING PURPOSES
-    const [fullContacts, setFullContacts] = useState([]);
-
     const [openDropdown, setOpenDropdown] = useState(false);
     const [keepFor, setKeepFor] = useState("week");
     const [keepItemValues, setKeepItemValues] = useState([
@@ -40,6 +31,17 @@ export default function AddContactScreen({ navigation }) {
         { label: 'One week', value: 'week' },
         { label: 'One month', value: 'month' }
     ]);
+    
+    useEffect(() => {
+        const refreshData = navigation.addListener('focus', () => {
+            // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
+            DatabaseConnection.dropTableTestable(db);
+            DatabaseConnection.createContactTable(db);
+        });
+
+        return refreshData;
+    }, [navigation]);
+
 
     const handleFirstName = (data) => {
         setFirstName(data);
@@ -76,9 +78,7 @@ export default function AddContactScreen({ navigation }) {
             keepFor
         }
 
-        let res = DatabaseConnection.addContact(db, newContact);
-        DatabaseConnection.viewContacts(db, setFullContacts);
-        //console.log(fullContacts[0].first_name);
+        DatabaseConnection.addContact(db, newContact)
     }
 
     return (
@@ -146,14 +146,6 @@ export default function AddContactScreen({ navigation }) {
                 button={styles.button}
                 description={"Save contact"}
                 action={() => { saveContact() }} />
-
-            <View>
-                {fullContacts.map((fc, i) => {
-                    return (
-                        <Text key={i}>{fc.firstName} {fc.lastName}</Text>
-                    )
-                })}
-            </View>
         </View>
     );
 }

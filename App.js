@@ -8,6 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import AddContactScreen from './screens/AddContactScreen';
 import ViewContactScreen from './screens/ViewContactsScreen';
+import UpdateContactScreen from './screens/UpdateContactScreen';
 
 /*
     <View style={styles.container}>
@@ -23,6 +24,7 @@ export default function App() {
       <Drawer.Navigator initialRouteName='View contacts'>
         <Drawer.Screen name="View contacts" component={ViewContactScreen} />
         <Drawer.Screen name="Add a contact" component={AddContactScreen} />
+        <Drawer.Screen name="Edit or delete a contact" component={UpdateContactScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
     

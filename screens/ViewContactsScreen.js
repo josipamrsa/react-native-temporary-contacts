@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
+import DisplayUserCard from '../components/DisplayUserCard';
+import NoDisplay from '../components/NoDisplay';
 
 import * as Contacts from 'expo-contacts';
+import { DatabaseConnection } from '../database/database-connect';
+
+const db = DatabaseConnection.getConnection();
 
 export default function ViewContactsScreen({ navigation }) {
   /* useEffect(() => {
@@ -19,9 +24,23 @@ export default function ViewContactsScreen({ navigation }) {
   })();
 }, []); */
 
+  const [fullContacts, setFullContacts] = useState([]);
+
+  useEffect(() => {
+    const refreshData = navigation.addListener('focus', () => {
+      DatabaseConnection.viewContacts(db, setFullContacts);
+    });
+
+    return refreshData;
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      <Text>view added contacts</Text>
+      {
+        fullContacts.length !== 0 ?
+          <DisplayUserCard fullContacts={fullContacts} /> :
+          <NoDisplay />
+      }
     </View>
   );
 }
@@ -29,8 +48,6 @@ export default function ViewContactsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     margin: '5%',
   },
 });
