@@ -10,12 +10,6 @@ import AddContactScreen from './screens/AddContactScreen';
 import ViewContactScreen from './screens/ViewContactsScreen';
 import UpdateContactScreen from './screens/UpdateContactScreen';
 
-/*
-    <View style={styles.container}>
-      <AddContactScreen />
-    </View> 
-*/
-
 const Drawer = createDrawerNavigator();
 
 export default function App() {

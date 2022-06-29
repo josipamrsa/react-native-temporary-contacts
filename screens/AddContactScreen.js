@@ -19,7 +19,7 @@ export default function AddContactScreen({ navigation }) {
 
     const [firstName, setFirstName] = useState("Josipa");
     const [lastName, setLastName] = useState("Mrša");
-    const [phoneNumber, setPhoneNumber] = useState("0915554444");
+    const [phoneNumber, setPhoneNumber] = useState("0914215930");
     const [location, setLocation] = useState("Split");
     const [description, setDescription] = useState("Temporary contact");
     const [isTemporary, setIsTemporary] = useState(true);
@@ -37,6 +37,10 @@ export default function AddContactScreen({ navigation }) {
             // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
             DatabaseConnection.dropTableTestable(db);
             DatabaseConnection.createContactTable(db);
+
+            let currentDate = new Date();
+            console.log(currentDate + 1);
+        
         });
 
         return refreshData;
