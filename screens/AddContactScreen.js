@@ -113,7 +113,7 @@ export default function AddContactScreen({ navigation }) {
         }
 
         setDeletionDate(addDays(new Date(), keepFor).toString());
-        
+
         let newContact = {
             firstName,
             lastName,
@@ -122,7 +122,7 @@ export default function AddContactScreen({ navigation }) {
             description,
             isTemporary,
             keepFor,
-            deletionDate 
+            deletionDate
         }
 
         try {
@@ -131,7 +131,7 @@ export default function AddContactScreen({ navigation }) {
             clearFields();
         } catch (err) {
             showToast(err, 2.6);
-         };
+        };
 
     }
 

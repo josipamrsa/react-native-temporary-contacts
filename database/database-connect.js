@@ -116,6 +116,8 @@ const addAContact = (db, data) => {
         deletionDate
     } = data;
 
+    let res = "";
+
     db.transaction((tx) => {
         tx.executeSql(
             ADD_TO_TABLE_CONTACT,
