@@ -81,6 +81,8 @@ const transformKeys = (obj) => {
 
 // PROCEDURES //
 
+// TODO - find a way to return the error (async?)
+
 const viewAllContacts = (db, setter) => {
     db.transaction((tx) => {
         tx.executeSql(
@@ -90,7 +92,7 @@ const viewAllContacts = (db, setter) => {
                 if (results.rows.length === 0) {
                     createTable(db);
                 }
-                
+
                 let tmp = [];
                 for (let i = 0; i < results.rows.length; i++) {
                     tmp.push(transformKeys(results.rows.item(i)));

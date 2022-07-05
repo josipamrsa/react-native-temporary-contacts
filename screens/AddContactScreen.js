@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Switch } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Switch, ToastAndroid, Dimensions } from 'react-native';
 
 import * as Contacts from 'expo-contacts';
 
@@ -28,7 +28,7 @@ export default function AddContactScreen({ navigation }) {
     const [isTemporary, setIsTemporary] = useState(true);
 
     const [openDropdown, setOpenDropdown] = useState(false);
-    const [keepFor, setKeepFor] = useState("");
+    const [keepFor, setKeepFor] = useState(7);
     const [deletionDate, setDeletionDate] = useState("");
 
     const [keepItemValues, setKeepItemValues] = useState([
@@ -78,8 +78,24 @@ export default function AddContactScreen({ navigation }) {
         setIsTemporary(previousState => !previousState);
     }
 
+    const showToast = (message, offset) => {
+        const toastHeight = parseInt(Dimensions.get('window').height * offset);
+        ToastAndroid.showWithGravityAndOffset(message, ToastAndroid.LONG, ToastAndroid.TOP, 0, toastHeight);
+    }
+
     const checkIfEmptyFields = (args) => {
         return args.map(arg => arg !== "").reduce((a, b) => a * b);
+    }
+
+    const clearFields = () => {
+        setFirstName("");
+        setLastName("");
+        setPhoneNumber("");
+        setLocation("");
+        setDescription("");
+        setIsTemporary(true);
+        setKeepFor("");
+        setDeletionDate("");
     }
 
     const saveContact = () => {
@@ -87,17 +103,17 @@ export default function AddContactScreen({ navigation }) {
         let isTemporarySet = isTemporary && keepFor !== "";
 
         if (!isContactDataFilled) {
-            console.log("Fill out all fields!");
+            showToast("Fill out all fields!", 0.3);
             return;
         }
 
         if (!isTemporarySet) {
-            console.log("Please select the period in which you wish to keep your temporary contact!")
+            showToast("Please select the period in which you wish to keep your temporary contact!", 1.8);
             return;
         }
 
         setDeletionDate(addDays(new Date(), keepFor).toString());
-
+        
         let newContact = {
             firstName,
             lastName,
@@ -106,10 +122,17 @@ export default function AddContactScreen({ navigation }) {
             description,
             isTemporary,
             keepFor,
-            deletionDate
+            deletionDate 
         }
 
-        DatabaseConnection.addContact(db, newContact)
+        try {
+            DatabaseConnection.addContact(db, newContact);
+            showToast("Contact added!", 2.6);
+            clearFields();
+        } catch (err) {
+            showToast(err, 2.6);
+         };
+
     }
 
     return (
