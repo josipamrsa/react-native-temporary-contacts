@@ -28,7 +28,7 @@ export default function AddContactScreen({ navigation }) {
     const [isTemporary, setIsTemporary] = useState(true);
 
     const [openDropdown, setOpenDropdown] = useState(false);
-    const [keepFor, setKeepFor] = useState(7);
+    const [keepFor, setKeepFor] = useState("");
     const [deletionDate, setDeletionDate] = useState("");
 
     const [keepItemValues, setKeepItemValues] = useState([
@@ -78,13 +78,25 @@ export default function AddContactScreen({ navigation }) {
         setIsTemporary(previousState => !previousState);
     }
 
-    const checkContactData = (...args) => {
-        args.forEach(arg => console.log(arg)) 
+    const checkIfEmptyFields = (args) => {
+        return args.map(arg => arg !== "").reduce((a, b) => a * b);
     }
 
     const saveContact = () => {
-        let deletionDate = addDays(new Date(), keepFor).toString();
-        checkContactData([firstName, lastName, phoneNumber, location, description]);
+        let isContactDataFilled = checkIfEmptyFields([firstName, lastName, phoneNumber, location, description]);
+        let isTemporarySet = isTemporary && keepFor !== "";
+
+        if (!isContactDataFilled) {
+            console.log("Fill out all fields!");
+            return;
+        }
+
+        if (!isTemporarySet) {
+            console.log("Please select the period in which you wish to keep your temporary contact!")
+            return;
+        }
+
+        setDeletionDate(addDays(new Date(), keepFor).toString());
 
         let newContact = {
             firstName,
@@ -105,7 +117,7 @@ export default function AddContactScreen({ navigation }) {
             <TextInput
                 placeholder="First name"
                 value={firstName}
-                
+
                 onChangeText={handleFirstName}
                 style={styles.input}
             />
