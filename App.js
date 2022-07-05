@@ -15,7 +15,7 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName='View contacts'>
+      <Drawer.Navigator initialRouteName='Add a contact'>
         <Drawer.Screen name="View contacts" component={ViewContactScreen} />
         <Drawer.Screen name="Add a contact" component={AddContactScreen} />
         <Drawer.Screen name="Edit or delete a contact" component={UpdateContactScreen} />

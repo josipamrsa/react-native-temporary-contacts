@@ -25,7 +25,8 @@ const CREATE_TABLE_CONTACT = `CREATE TABLE IF NOT EXISTS
         location VARCHAR(20),
         description VARCHAR(150),
         temporary INTEGER,
-        keep_for TEXT
+        keep_for INTEGER,
+        deletion_date TEXT
     )`;
 
 const DROP_TABLE_CONTACT = `DROP TABLE IF EXISTS table_contact`;
@@ -38,7 +39,8 @@ const ADD_TO_TABLE_CONTACT = `INSERT INTO
         location,
         description,
         temporary,
-        keep_for) VALUES (?,?,?,?,?,?,?)`;
+        keep_for,
+        deletion_date) VALUES (?,?,?,?,?,?,?,?)`;
 
 const VIEW_ALL_TABLE_CONTACT = `SELECT * FROM table_contact`;
 
@@ -108,7 +110,8 @@ const addAContact = (db, data) => {
         location,
         description,
         isTemporary,
-        keepFor
+        keepFor,
+        deletionDate
     } = data;
 
     db.transaction((tx) => {
@@ -121,7 +124,8 @@ const addAContact = (db, data) => {
                 location,
                 description,
                 isTemporary,
-                keepFor
+                keepFor,
+                deletionDate
             ],
             (tx, results) => {
                 console.log("contact added");

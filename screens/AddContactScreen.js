@@ -15,7 +15,10 @@ export default function AddContactScreen({ navigation }) {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
-    const [isTemporary, setIsTemporary] = useState(true); */
+    const [isTemporary, setIsTemporary] = useState(true);
+    const [keepFor, setKeepFor] = useState("");
+    const [deletionDate, setDeletionDate] = useState("");
+     */
 
     const [firstName, setFirstName] = useState("Josipa");
     const [lastName, setLastName] = useState("Mrša");
@@ -25,22 +28,26 @@ export default function AddContactScreen({ navigation }) {
     const [isTemporary, setIsTemporary] = useState(true);
 
     const [openDropdown, setOpenDropdown] = useState(false);
-    const [keepFor, setKeepFor] = useState("week");
+    const [keepFor, setKeepFor] = useState(7);
+    const [deletionDate, setDeletionDate] = useState("");
+
     const [keepItemValues, setKeepItemValues] = useState([
-        { label: 'One day', value: 'day' },
-        { label: 'One week', value: 'week' },
-        { label: 'One month', value: 'month' }
+        { label: 'One day', value: 1 },
+        { label: 'One week', value: 7 },
+        { label: 'One month', value: 30 }
     ]);
-    
+
+    const addDays = (date, days) => {
+        let result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
     useEffect(() => {
         const refreshData = navigation.addListener('focus', () => {
             // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
             DatabaseConnection.dropTableTestable(db);
             DatabaseConnection.createContactTable(db);
-
-            let currentDate = new Date();
-            console.log(currentDate + 1);
-        
         });
 
         return refreshData;
@@ -71,7 +78,14 @@ export default function AddContactScreen({ navigation }) {
         setIsTemporary(previousState => !previousState);
     }
 
+    const checkContactData = (...args) => {
+        args.forEach(arg => console.log(arg)) 
+    }
+
     const saveContact = () => {
+        let deletionDate = addDays(new Date(), keepFor).toString();
+        checkContactData([firstName, lastName, phoneNumber, location, description]);
+
         let newContact = {
             firstName,
             lastName,
@@ -79,7 +93,8 @@ export default function AddContactScreen({ navigation }) {
             location,
             description,
             isTemporary,
-            keepFor
+            keepFor,
+            deletionDate
         }
 
         DatabaseConnection.addContact(db, newContact)
@@ -90,6 +105,7 @@ export default function AddContactScreen({ navigation }) {
             <TextInput
                 placeholder="First name"
                 value={firstName}
+                
                 onChangeText={handleFirstName}
                 style={styles.input}
             />
