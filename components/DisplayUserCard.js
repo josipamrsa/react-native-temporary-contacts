@@ -20,6 +20,7 @@ export default function DisplayUserCard(props) {
         <View style={styles.cardsContainer}>
             {
                 props.fullContacts.map((fc, i) => {
+                    Object.keys(fc).forEach(k => console.log(k));
                     return (
                         <View key={i} style={
                             { ...styles.card, ...changeColorByDuration(fc.keepFor) }

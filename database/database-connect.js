@@ -50,6 +50,12 @@ const errHandler = (err) => {
     console.log(err);
 }
 
+const addDays = (date, days) => {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
 const transformKeys = (obj) => {
     let transformed = {};
 
@@ -83,61 +89,32 @@ const transformKeys = (obj) => {
 
 // TODO - find a way to return the error (async?)
 
-const viewAllContacts = (db, setter, errSetter) => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            VIEW_ALL_TABLE_CONTACT,
-            [],
-            (tx, results) => {
-                if (results.rows.length === 0) {
-                    createTable(db);
-                }
+const viewAllContacts = (db) => {
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                VIEW_ALL_TABLE_CONTACT,
+                [],
+                (_, results) => {
+                    if (results.rows.length === 0) {
+                        createTable(db);
+                    }
 
-                let tmp = [];
-                for (let i = 0; i < results.rows.length; i++) {
-                    tmp.push(transformKeys(results.rows.item(i)));
-                }
-                setter(tmp);
-            },
-            (tx, err) => errSetter(err)
-        )
-    })
-};
-
-const addAContact2 = (db, data, errSetter) => {
-    const {
-        firstName,
-        lastName,
-        phoneNumber,
-        location,
-        description,
-        isTemporary,
-        keepFor,
-        deletionDate
-    } = data;
-
-    let res = "";
-
-    db.transaction((tx) => {
-        tx.executeSql(
-            ADD_TO_TABLE_CONTACT,
-            [
-                firstName,
-                lastName,
-                phoneNumber,
-                location,
-                description,
-                isTemporary,
-                keepFor,
-                deletionDate
-            ],
-            (tx, results) => {
-                console.log("contact added");
-            },
-            (tx, err) => errSetter(err)
-        );
+                    let tmp = [];
+                    for (let i = 0; i < results.rows.length; i++) {
+                        console.log(results.rows.item(i));
+                        tmp.push(transformKeys(results.rows.item(i)));
+                    }
+                    
+                    resolve(tmp);
+                },
+                (_, err) => reject(err)
+            )
+        })
     });
-}
+
+
+};
 
 const addAContact = (db, data) => {
     const {
@@ -147,9 +124,10 @@ const addAContact = (db, data) => {
         location,
         description,
         isTemporary,
-        keepFor,
-        deletionDate
+        keepFor
     } = data;
+
+    let deletionDate = addDays(new Date(), keepFor).toString();
 
     return new Promise((resolve, reject) => {
         db.transaction((tx) => {
@@ -202,7 +180,7 @@ const createTable = (db) => {
 export const DatabaseConnection = {
     getConnection: () => SQLite.openDatabase("contactdb.db"),
     createContactTable: (db) => createTable(db),
-    viewContacts: (db, setter, errSetter) => viewAllContacts(db, setter, errSetter),
-    addContact: (db, data, errSetter) => addAContact(db, data),
+    viewContacts: (db) => viewAllContacts(db),
+    addContact: (db, data) => addAContact(db, data),
     dropTableTestable: (db) => dropTableTestable(db)
 }

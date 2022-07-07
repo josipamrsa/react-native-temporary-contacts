@@ -1,35 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Switch, ToastAndroid, Dimensions } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    Switch,
+    TouchableWithoutFeedback,
+    Keyboard
+} from 'react-native';
 
 import * as Contacts from 'expo-contacts';
-
-import CustomizableButton from '../components/CustomizableButton';
 import DropDownPicker from 'react-native-dropdown-picker';
+import CustomizableButton from '../components/CustomizableButton';
+
 import { DatabaseConnection } from '../database/database-connect';
 import usePushNotifications from '../hooks/usePushNotifications';
+import {
+    showToast,
+    checkIfEmptyFields
+} from '../constants/Helpers';
+
 
 const db = DatabaseConnection.getConnection();
 
 export default function AddContactScreen({ navigation }) {
-    const [firstName, setFirstName] = useState("");
+    /*const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
     const [isTemporary, setIsTemporary] = useState(true);
     const [keepFor, setKeepFor] = useState("");
-    const [deletionDate, setDeletionDate] = useState("");
+    */
 
-    /* 
-        const [firstName, setFirstName] = useState("Josipa");
-        const [lastName, setLastName] = useState("Mrša");
-        const [phoneNumber, setPhoneNumber] = useState("0914215930");
-        const [location, setLocation] = useState("Split");
-        const [description, setDescription] = useState("Temporary contact");
-        const [isTemporary, setIsTemporary] = useState(true); 
-        const [keepFor, setKeepFor] = useState(7);
-        const [deletionDate, setDeletionDate] = useState("");
-        */
+    const [firstName, setFirstName] = useState("Josipa");
+    const [lastName, setLastName] = useState("Mrša");
+    const [phoneNumber, setPhoneNumber] = useState("0987654321");
+    const [location, setLocation] = useState("Split");
+    const [description, setDescription] = useState("Temporary contact");
+    const [isTemporary, setIsTemporary] = useState(true);
+    const [keepFor, setKeepFor] = useState(7);
 
     const [openDropdown, setOpenDropdown] = useState(false);
     const [keepItemValues, setKeepItemValues] = useState([
@@ -37,12 +47,6 @@ export default function AddContactScreen({ navigation }) {
         { label: 'One week', value: 7 },
         { label: 'One month', value: 30 }
     ]);
-
-    const addDays = (date, days) => {
-        let result = new Date(date);
-        result.setDate(result.getDate() + days);
-        return result;
-    }
 
     const {
         sendPushNotification,
@@ -85,15 +89,6 @@ export default function AddContactScreen({ navigation }) {
         setIsTemporary(previousState => !previousState);
     }
 
-    const showToast = (message, offset) => {
-        const toastHeight = parseInt(Dimensions.get('window').height * offset);
-        ToastAndroid.showWithGravityAndOffset(message, ToastAndroid.LONG, ToastAndroid.TOP, 0, toastHeight);
-    }
-
-    const checkIfEmptyFields = (args) => {
-        return args.map(arg => arg !== "").reduce((a, b) => a * b);
-    }
-
     const clearFields = () => {
         setFirstName("");
         setLastName("");
@@ -102,7 +97,10 @@ export default function AddContactScreen({ navigation }) {
         setDescription("");
         setIsTemporary(true);
         setKeepFor("");
-        setDeletionDate("");
+    }
+
+    const addContactToPhoneContacts = () => {
+        // TODO - Expo Contacts - add contact as a regular contact 
     }
 
     const saveContact = () => {
@@ -127,8 +125,6 @@ export default function AddContactScreen({ navigation }) {
             return;
         }
 
-        setDeletionDate(addDays(new Date(), keepFor).toString());
-
         let newContact = {
             firstName,
             lastName,
@@ -137,8 +133,9 @@ export default function AddContactScreen({ navigation }) {
             description,
             isTemporary,
             keepFor,
-            deletionDate
         }
+
+        console.log(newContact);
 
         DatabaseConnection.addContact(db, newContact).then(res => {
             showToast("Contact added!", 2.6);
@@ -151,72 +148,74 @@ export default function AddContactScreen({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                placeholder="First name"
-                value={firstName}
-                onChangeText={handleFirstName}
-                style={styles.input}
-            />
-
-            <TextInput
-                placeholder="Last name"
-                value={lastName}
-                onChangeText={handleLastName}
-                style={styles.input}
-            />
-
-            <TextInput
-                placeholder="Phone number"
-                value={phoneNumber}
-                onChangeText={handlePhoneNumber}
-                keyboardType="numeric"
-                style={styles.input}
-            />
-
-            <TextInput
-                placeholder="Location"
-                value={location}
-                onChangeText={handleLocation}
-                style={styles.input}
-            />
-
-            <TextInput
-                placeholder="Description"
-                value={description}
-                onChangeText={handleDescription}
-                style={styles.input}
-            />
-
-            <View style={styles.temporarySelect}>
-                <Switch
-                    trackColor={{ false: "#767577", true: "#3d4a87" }}
-                    thumbColor={isTemporary ? "#7891ff" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={handleIsTemporary}
-                    value={isTemporary}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={styles.container}>
+                <TextInput
+                    placeholder="First name"
+                    value={firstName}
+                    onChangeText={handleFirstName}
+                    style={styles.input}
                 />
 
-                <Text>Temporary contact?</Text>
+                <TextInput
+                    placeholder="Last name"
+                    value={lastName}
+                    onChangeText={handleLastName}
+                    style={styles.input}
+                />
+
+                <TextInput
+                    placeholder="Phone number"
+                    value={phoneNumber}
+                    onChangeText={handlePhoneNumber}
+                    keyboardType="numeric"
+                    style={styles.input}
+                />
+
+                <TextInput
+                    placeholder="Location"
+                    value={location}
+                    onChangeText={handleLocation}
+                    style={styles.input}
+                />
+
+                <TextInput
+                    placeholder="Description"
+                    value={description}
+                    onChangeText={handleDescription}
+                    style={styles.input}
+                />
+
+                <View style={styles.temporarySelect}>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#3d4a87" }}
+                        thumbColor={isTemporary ? "#7891ff" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={handleIsTemporary}
+                        value={isTemporary}
+                    />
+
+                    <Text>Temporary contact?</Text>
+                </View>
+
+                {isTemporary && <View style={styles.contactLengthArea}>
+                    <Text>Keep contact for</Text>
+                    <DropDownPicker
+                        open={openDropdown}
+                        value={keepFor}
+                        items={keepItemValues}
+                        setOpen={setOpenDropdown}
+                        setValue={setKeepFor}
+                        setItems={setKeepItemValues}
+                    />
+                </View>}
+
+                <CustomizableButton
+                    button={styles.button}
+                    description={"Save contact"}
+                    action={() => { saveContact() }} />
             </View>
-
-            {isTemporary && <View style={styles.contactLengthArea}>
-                <Text>Keep contact for</Text>
-                <DropDownPicker
-                    open={openDropdown}
-                    value={keepFor}
-                    items={keepItemValues}
-                    setOpen={setOpenDropdown}
-                    setValue={setKeepFor}
-                    setItems={setKeepItemValues}
-                />
-            </View>}
-
-            <CustomizableButton
-                button={styles.button}
-                description={"Save contact"}
-                action={() => { saveContact() }} />
-        </View>
+        </TouchableWithoutFeedback>
     );
 }
 

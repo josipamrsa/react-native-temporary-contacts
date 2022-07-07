@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import DisplayUserCard from '../components/DisplayUserCard';
 import NoDisplay from '../components/NoDisplay';
 
 import * as Contacts from 'expo-contacts';
+
 import { DatabaseConnection } from '../database/database-connect';
+import usePushNotifications from '../hooks/usePushNotifications';
+import { showToast } from '../constants/Helpers';
+
 
 const db = DatabaseConnection.getConnection();
 
@@ -25,12 +29,12 @@ export default function ViewContactsScreen({ navigation }) {
 }, []); */
 
   const [fullContacts, setFullContacts] = useState([]);
-  // TODO - lift state to App
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const refreshData = navigation.addListener('focus', () => {
-      DatabaseConnection.viewContacts(db, setFullContacts, setError);
+      DatabaseConnection.viewContacts(db)
+        .then(res => setFullContacts(res))
+        .catch(err => showToast(err.message, 2.5)); 
     });
 
     return refreshData;
