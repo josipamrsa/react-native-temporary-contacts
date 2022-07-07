@@ -6,11 +6,12 @@ import * as Contacts from 'expo-contacts';
 import CustomizableButton from '../components/CustomizableButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DatabaseConnection } from '../database/database-connect';
+import usePushNotifications from '../hooks/usePushNotifications';
 
 const db = DatabaseConnection.getConnection();
 
 export default function AddContactScreen({ navigation }) {
-    /* const [firstName, setFirstName] = useState("");
+    const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [location, setLocation] = useState("");
@@ -18,19 +19,19 @@ export default function AddContactScreen({ navigation }) {
     const [isTemporary, setIsTemporary] = useState(true);
     const [keepFor, setKeepFor] = useState("");
     const [deletionDate, setDeletionDate] = useState("");
-     */
 
-    const [firstName, setFirstName] = useState("Josipa");
-    const [lastName, setLastName] = useState("Mrša");
-    const [phoneNumber, setPhoneNumber] = useState("0914215930");
-    const [location, setLocation] = useState("Split");
-    const [description, setDescription] = useState("Temporary contact");
-    const [isTemporary, setIsTemporary] = useState(true);
+    /* 
+        const [firstName, setFirstName] = useState("Josipa");
+        const [lastName, setLastName] = useState("Mrša");
+        const [phoneNumber, setPhoneNumber] = useState("0914215930");
+        const [location, setLocation] = useState("Split");
+        const [description, setDescription] = useState("Temporary contact");
+        const [isTemporary, setIsTemporary] = useState(true); 
+        const [keepFor, setKeepFor] = useState(7);
+        const [deletionDate, setDeletionDate] = useState("");
+        */
 
     const [openDropdown, setOpenDropdown] = useState(false);
-    const [keepFor, setKeepFor] = useState(7);
-    const [deletionDate, setDeletionDate] = useState("");
-
     const [keepItemValues, setKeepItemValues] = useState([
         { label: 'One day', value: 1 },
         { label: 'One week', value: 7 },
@@ -42,6 +43,11 @@ export default function AddContactScreen({ navigation }) {
         result.setDate(result.getDate() + days);
         return result;
     }
+
+    const {
+        sendPushNotification,
+        expoPushToken
+    } = usePushNotifications();
 
     useEffect(() => {
         const refreshData = navigation.addListener('focus', () => {
@@ -63,6 +69,7 @@ export default function AddContactScreen({ navigation }) {
     }
 
     const handlePhoneNumber = (data) => {
+        if (isNaN(data)) return;
         setPhoneNumber(data);
     }
 
@@ -99,15 +106,23 @@ export default function AddContactScreen({ navigation }) {
     }
 
     const saveContact = () => {
-        let isContactDataFilled = checkIfEmptyFields([firstName, lastName, phoneNumber, location, description]);
-        let isTemporarySet = isTemporary && keepFor !== "";
+        let isContactDataFilled = checkIfEmptyFields(
+            [
+                firstName,
+                lastName,
+                phoneNumber,
+                location,
+                description
+            ]);
+
+        let isTemporarySet = isTemporary && keepFor === "";
 
         if (!isContactDataFilled) {
             showToast("Fill out all fields!", 0.3);
             return;
         }
 
-        if (!isTemporarySet) {
+        if (isTemporarySet) {
             showToast("Please select the period in which you wish to keep your temporary contact!", 1.8);
             return;
         }
@@ -125,14 +140,14 @@ export default function AddContactScreen({ navigation }) {
             deletionDate
         }
 
-        try {
-            DatabaseConnection.addContact(db, newContact);
+        DatabaseConnection.addContact(db, newContact).then(res => {
             showToast("Contact added!", 2.6);
+            //sendPushNotification(expoPushToken, "Contact added!");
             clearFields();
-        } catch (err) {
-            showToast(err, 2.6);
-        };
-
+        }).catch((err) => {
+            // TODO - err handler on database controller
+            showToast(err.message, 2.6);
+        });
     }
 
     return (
@@ -140,7 +155,6 @@ export default function AddContactScreen({ navigation }) {
             <TextInput
                 placeholder="First name"
                 value={firstName}
-
                 onChangeText={handleFirstName}
                 style={styles.input}
             />
@@ -156,6 +170,7 @@ export default function AddContactScreen({ navigation }) {
                 placeholder="Phone number"
                 value={phoneNumber}
                 onChangeText={handlePhoneNumber}
+                keyboardType="numeric"
                 style={styles.input}
             />
 

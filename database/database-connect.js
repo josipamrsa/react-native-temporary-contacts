@@ -83,7 +83,7 @@ const transformKeys = (obj) => {
 
 // TODO - find a way to return the error (async?)
 
-const viewAllContacts = (db, setter) => {
+const viewAllContacts = (db, setter, errSetter) => {
     db.transaction((tx) => {
         tx.executeSql(
             VIEW_ALL_TABLE_CONTACT,
@@ -99,12 +99,12 @@ const viewAllContacts = (db, setter) => {
                 }
                 setter(tmp);
             },
-            (tx, err) => errHandler(err)
+            (tx, err) => errSetter(err)
         )
     })
 };
 
-const addAContact = (db, data) => {
+const addAContact2 = (db, data, errSetter) => {
     const {
         firstName,
         lastName,
@@ -134,8 +134,41 @@ const addAContact = (db, data) => {
             (tx, results) => {
                 console.log("contact added");
             },
-            (tx, err) => errHandler(err)
+            (tx, err) => errSetter(err)
         );
+    });
+}
+
+const addAContact = (db, data) => {
+    const {
+        firstName,
+        lastName,
+        phoneNumber,
+        location,
+        description,
+        isTemporary,
+        keepFor,
+        deletionDate
+    } = data;
+
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                ADD_TO_TABLE_CONTACT,
+                [
+                    firstName,
+                    lastName,
+                    phoneNumber,
+                    location,
+                    description,
+                    isTemporary,
+                    keepFor,
+                    deletionDate
+                ],
+                (_, results) => resolve(results),
+                (_, err) => reject(err)
+            );
+        });
     });
 }
 
@@ -169,7 +202,7 @@ const createTable = (db) => {
 export const DatabaseConnection = {
     getConnection: () => SQLite.openDatabase("contactdb.db"),
     createContactTable: (db) => createTable(db),
-    viewContacts: (db, setter) => viewAllContacts(db, setter),
-    addContact: (db, data) => addAContact(db, data),
+    viewContacts: (db, setter, errSetter) => viewAllContacts(db, setter, errSetter),
+    addContact: (db, data, errSetter) => addAContact(db, data),
     dropTableTestable: (db) => dropTableTestable(db)
 }

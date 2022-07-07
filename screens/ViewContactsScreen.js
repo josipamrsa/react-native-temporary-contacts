@@ -25,10 +25,12 @@ export default function ViewContactsScreen({ navigation }) {
 }, []); */
 
   const [fullContacts, setFullContacts] = useState([]);
+  // TODO - lift state to App
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const refreshData = navigation.addListener('focus', () => {
-      DatabaseConnection.viewContacts(db, setFullContacts);
+      DatabaseConnection.viewContacts(db, setFullContacts, setError);
     });
 
     return refreshData;
