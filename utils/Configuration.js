@@ -1,3 +1,5 @@
-export const EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send';  //----EXPO PUSH SERVER----//
+ //----EXPO PUSH SERVER----//
+export const EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send'; 
 
-export const BACKGROUND_FETCH_TASK = 'background-fetch';
+ //----BACKGROUND TASKING----//
+export const CHECK_READY_FOR_DELETION = 'check-ready-for-deletion';

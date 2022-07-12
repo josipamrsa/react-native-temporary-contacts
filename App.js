@@ -10,14 +10,15 @@ import AddContactScreen from './screens/AddContactScreen';
 import ViewContactScreen from './screens/ViewContactsScreen';
 import UpdateContactScreen from './screens/UpdateContactScreen';
 
-import useTaskManager from './hooks/useTaskManager';
-import { BACKGROUND_FETCH_TASK } from './utils/Configuration'
+import useContactTaskManager from './hooks/useContactTaskManager';
+import { CHECK_READY_FOR_DELETION } from './utils/Configuration'
 
-useTaskManager.defineATask(BACKGROUND_FETCH_TASK);
+useContactTaskManager.defineATask(CHECK_READY_FOR_DELETION);
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const { checkStatusAsync, toggleFetchTask } = useTaskManager.useTaskManagerFunctions(BACKGROUND_FETCH_TASK);
+  const { checkStatusAsync, toggleFetchTask } = useContactTaskManager
+    .useTaskManagerFunctions(CHECK_READY_FOR_DELETION);
 
   return (
     <NavigationContainer>
