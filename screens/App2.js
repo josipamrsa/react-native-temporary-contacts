@@ -10,15 +10,13 @@ import AddContactScreen from './screens/AddContactScreen';
 import ViewContactScreen from './screens/ViewContactsScreen';
 import UpdateContactScreen from './screens/UpdateContactScreen';
 
-import useTaskManager from './hooks/useTaskManager';
-import { BACKGROUND_FETCH_TASK } from './utils/Configuration'
+// FIXME - BackgroundFetch test
+import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from 'expo-task-manager';
 
-useTaskManager.defineATask(BACKGROUND_FETCH_TASK);
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const { checkStatusAsync, toggleFetchTask } = useTaskManager.useTaskManagerFunctions(BACKGROUND_FETCH_TASK);
-
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName='View contacts'>

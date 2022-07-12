@@ -9,16 +9,12 @@ import {
     Keyboard
 } from 'react-native';
 
-import * as Contacts from 'expo-contacts';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomizableButton from '../components/CustomizableButton';
 
 import { DatabaseConnection } from '../database/database-connect';
-import usePushNotifications from '../hooks/usePushNotifications';
-import {
-    showToast,
-    checkIfEmptyFields
-} from '../constants/Helpers';
+import useNotifications from '../hooks/useNotifications';
+import { checkIfEmptyFields } from '../utils/Helpers';
 
 
 const db = DatabaseConnection.getConnection();
@@ -50,8 +46,9 @@ export default function AddContactScreen({ navigation }) {
 
     const {
         sendPushNotification,
-        expoPushToken
-    } = usePushNotifications();
+        expoPushToken,
+        showToast
+    } = useNotifications();
 
     useEffect(() => {
         const refreshData = navigation.addListener('focus', () => {
@@ -99,9 +96,6 @@ export default function AddContactScreen({ navigation }) {
         setKeepFor("");
     }
 
-    const addContactToPhoneContacts = () => {
-        // TODO - Expo Contacts - add contact as a regular contact 
-    }
 
     const saveContact = () => {
         let isContactDataFilled = checkIfEmptyFields(

@@ -6,13 +6,15 @@ import {
 
 import {
     Alert,
-    Platform
+    Platform,
+    ToastAndroid,
+    Dimensions
 } from 'react-native';
 
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 
-import { EXPO_PUSH_URL } from '../constants/Configuration';
+import { EXPO_PUSH_URL } from '../utils/Configuration';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -119,9 +121,15 @@ const usePushNotifications = () => {
         return token;
     }
 
+    const showToast = (message, offset) => {
+        const toastHeight = parseInt(Dimensions.get('window').height * offset);
+        ToastAndroid.showWithGravityAndOffset(message, ToastAndroid.LONG, ToastAndroid.TOP, 0, toastHeight);
+    }
+
     return {
         sendPushNotification,
-        expoPushToken
+        expoPushToken,
+        showToast
     }
 }
 
