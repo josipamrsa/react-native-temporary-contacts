@@ -26,8 +26,8 @@ const customizableStyle = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 5,
-        width: "100%"
     },
+    
     buttonTextStyle: {
         color: "white",
         textTransform: 'uppercase'
