@@ -32,8 +32,8 @@ export default function AddContactScreen({ navigation }) {
     useEffect(() => {
         const refreshData = navigation.addListener('focus', () => {
             // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
-            DatabaseConnection.dropTableTestable(db);
-            DatabaseConnection.createContactTable(db);
+            /* DatabaseConnection.dropTableTestable(db);
+            DatabaseConnection.createContactTable(db); */
         });
 
         return refreshData;
@@ -73,7 +73,7 @@ export default function AddContactScreen({ navigation }) {
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <ContactForm contact={newContact}
+            <ContactForm contact={{}}
                 contactAction={saveContact}
                 btnDescription="Save contact" />
         </TouchableWithoutFeedback>

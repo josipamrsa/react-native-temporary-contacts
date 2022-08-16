@@ -2,7 +2,7 @@ import React  from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CustomizableButton from './CustomizableButton';
 
-export default function ContactDetails({ contact, uid, setIsEdit }) {
+export default function ContactDetails({ contact, uid, setIsEdit, deleteContact }) {
     return (
         <View style={styles.update}>
             <Text style={styles.contact} >{contact.firstName} {contact.lastName}</Text>
@@ -15,7 +15,7 @@ export default function ContactDetails({ contact, uid, setIsEdit }) {
                 <CustomizableButton
                     button={styles.deleteButton}
                     description={"Delete"}
-                    action={() => { console.log("delete") }} />
+                    action={() => deleteContact(contact.userId)} />
             </View>
         </View>
     );

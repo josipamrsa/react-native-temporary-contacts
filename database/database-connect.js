@@ -44,6 +44,8 @@ const ADD_TO_TABLE_CONTACT = `INSERT INTO
 
 const VIEW_ALL_TABLE_CONTACT = `SELECT * FROM table_contact`;
 
+const DELETE_CONTACT_FROM_TABLE = `DELETE FROM table_contact WHERE user_id=?`;
+
 // HELPERS //
 
 const errHandler = (err) => {
@@ -148,6 +150,19 @@ const addAContact = (db, data) => {
             );
         });
     });
+};
+
+const deleteAContact = (db, uid) => {
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                DELETE_CONTACT_FROM_TABLE,
+                [uid],
+                (_, results) => resolve(results),
+                (_, err) => reject(err)
+            );
+        });
+    });
 }
 
 // TODO - ONLY FOR TESTING - DELETE LATER
@@ -182,5 +197,6 @@ export const DatabaseConnection = {
     createContactTable: (db) => createTable(db),
     viewContacts: (db) => viewAllContacts(db),
     addContact: (db, data) => addAContact(db, data),
+    deleteContact: (db, uid) => deleteAContact(db, uid),
     dropTableTestable: (db) => dropTableTestable(db)
 }

@@ -22,7 +22,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName='Edit or delete a contact'>
+      <Drawer.Navigator initialRouteName='View contacts'>
         <Drawer.Screen name="View contacts" component={ViewContactScreen} />
         <Drawer.Screen name="Add a contact" component={AddContactScreen} />
         <Drawer.Screen name="Edit or delete a contact" component={UpdateContactScreen} />
