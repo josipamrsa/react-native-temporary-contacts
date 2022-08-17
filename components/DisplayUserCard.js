@@ -42,7 +42,7 @@ export default function DisplayUserCard(props) {
                             { ...styles.card, ...changeColorByDuration(fc.keepFor) }
                         }>
                             <View style={styles.contactDetails}>
-                                <ProfileCircle firstName={fc.firstName} lastName={fc.lastName} />
+                                <ProfileCircle firstName={fc.firstName} lastName={fc.lastName} contact={fc} />
 
                                 <View>
                                     <Text style={styles.nameTag}>{fc.firstName} {fc.lastName}</Text>
