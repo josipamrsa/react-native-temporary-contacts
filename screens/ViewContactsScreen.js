@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import DisplayUserCard from '../components/DisplayUserCard';
+import { StyleSheet, View, FlatList } from 'react-native';
+
+import DisplayContactCard from '../components/DisplayContactCard';
 import NoDisplay from '../components/NoDisplay';
 
 import { DatabaseConnection } from '../database/database-connect';
@@ -42,13 +43,17 @@ export default function ViewContactsScreen({ navigation }) {
     return refreshData;
   }, [navigation]);
 
+  const renderContacts = ({ item }) => {
+    return <DisplayContactCard contact={item} />
+  }
+
   return (
     <View style={styles.container}>
-      {
-        fullContacts.length !== 0 ?
-          <DisplayUserCard fullContacts={fullContacts} /> :
-          <NoDisplay />
-      }
+      <View style={styles.cardsContainer}>
+        {fullContacts.length !== 0 ?
+          <FlatList data={fullContacts} renderItem={renderContacts} /> :
+          <NoDisplay />}
+      </View>
     </View>
   );
 }
@@ -57,5 +62,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: '5%',
+  },
+
+  cardsContainer: {
+    flex: 1,
+    backgroundColor: "#f3f3f3",
+    padding: 10,
+    borderRadius: 15,
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
 });

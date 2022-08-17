@@ -2,7 +2,7 @@ import React  from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CustomizableButton from './CustomizableButton';
 
-export default function ContactDetails({ contact, uid, setIsEdit, deleteContact }) {
+export default function ContactRow({ contact, setIsEdit, deleteContact }) {
     return (
         <View style={styles.update}>
             <Text style={styles.contact} >{contact.firstName} {contact.lastName}</Text>
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
 
     editButton: {
         backgroundColor: "lightgreen",
+        marginRight: 4
     },
 
     deleteButton: {

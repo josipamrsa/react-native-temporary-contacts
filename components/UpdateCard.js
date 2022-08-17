@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Modal, Pressable } from 'react-native';
-import ContactDetails from './ContactDetails';
+
+import ContactRow from './ContactRow';
 import UpdateContact from './UpdateContact';
 
 export default function UpdateCard({ contact, uid, updateContact, deleteContact }) {
     const [isEdit, setIsEdit] = useState(false);
     return (
         <View key={uid} style={styles.container}>
-            <ContactDetails contact={contact} setIsEdit={setIsEdit} deleteContact={deleteContact} />
+            <ContactRow contact={contact} setIsEdit={setIsEdit} deleteContact={deleteContact} />
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={isEdit}
                 onRequestClose={() => setIsEdit(!isEdit)}>
                 <View style={styles.modal}>
-
                     <UpdateContact contact={contact} setIsEdit={setIsEdit} update={updateContact} />
                     <Pressable
                         style={[styles.button, styles.buttonClose]}
@@ -29,8 +29,18 @@ export default function UpdateCard({ contact, uid, updateContact, deleteContact 
 
 const styles = StyleSheet.create({
     container: {
-        /* flex: 1, */
-        /* width: "100%" */
+        shadowColor: "gray",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        backgroundColor: "#f3f3f3",
+        margin: 2,
+        padding: 10,
+        borderRadius: 5
     },
 
     modal: {

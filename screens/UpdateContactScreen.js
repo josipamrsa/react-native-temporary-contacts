@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Alert } from 'react-native';
+import { StyleSheet, View, Alert, FlatList } from 'react-native';
 
 import { DatabaseConnection } from '../database/database-connect';
 import UpdateCard from '../components/UpdateCard';
@@ -21,6 +21,14 @@ export default function UpdateContactScreen({ navigation }) {
 
         return refreshData;
     }, [navigation]);
+
+    const renderContacts = ({ item }) => {
+        return <UpdateCard
+            key={item.userId}
+            contact={item}
+            updateContact={updateCurrentContact}
+            deleteContact={deleteCurrentContact} />
+    }
 
     const updateCurrentContact = (updatedContact) => {
         console.log("updated");
@@ -52,13 +60,8 @@ export default function UpdateContactScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            {contacts.length > 0 ? contacts.map((contact, i) =>
-                <UpdateCard
-                    key={i}
-                    contact={contact}
-                    updateContact={updateCurrentContact}
-                    deleteContact={deleteCurrentContact} />) : <NoDisplay />}
-        </View>
+            {contacts.length > 0 ? <FlatList data={contacts} renderItem={renderContacts} /> : <NoDisplay />}
+        </View> 
     );
 }
 

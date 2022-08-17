@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
-import CustomizableButton from './CustomizableButton';
-import ProfileCircle from './ProfileCircle';
+
 import * as Icon from "react-native-feather";
 import * as Linking from "expo-linking";
 
-export default function DisplayUserCard(props) {
+import ProfileCircle from './ProfileCircle';
+
+export default function DisplayContactCard({ contact }) {
     const changeColorByDuration = (duration) => {
         switch (duration) {
             case 1:
@@ -34,41 +35,32 @@ export default function DisplayUserCard(props) {
     }
 
     return (
-        <View style={styles.cardsContainer}>
-            {
-                props.fullContacts.map((fc, i) => {
-                    return (
-                        <View key={i} style={
-                            { ...styles.card, ...changeColorByDuration(fc.keepFor) }
-                        }>
-                            <View style={styles.contactDetails}>
-                                <ProfileCircle firstName={fc.firstName} lastName={fc.lastName} contact={fc} />
+        <View key={contact.userId} style={
+            { ...styles.card, ...changeColorByDuration(contact.keepFor) }}>
+            <View style={styles.contactDetails}>
+                <ProfileCircle firstName={contact.firstName} lastName={contact.lastName} contact={contact} />
 
-                                <View>
-                                    <Text style={styles.nameTag}>{fc.firstName} {fc.lastName}</Text>
-                                    <Text style={styles.phoneTag}>{fc.phone}</Text>
-                                    <Text style={styles.descriptionTag}>{fc.description}</Text>
+                <View>
+                    <Text style={styles.nameTag}>{contact.firstName} {contact.lastName}</Text>
+                    <Text style={styles.phoneTag}>{contact.phone}</Text>
+                    <Text style={styles.descriptionTag}>{contact.description}</Text>
 
-                                </View>
-                            </View>
+                </View>
+            </View>
 
-                            <View style={styles.contactOptions}>
-                                <Pressable
-                                    style={styles.control}
-                                    onPress={() => communicateWithContact("tel", fc.phone)}>
-                                    <Icon.PhoneCall stroke="black" width={28} height={28} />
-                                </Pressable>
+            <View style={styles.contactOptions}>
+                <Pressable
+                    style={styles.control}
+                    onPress={() => communicateWithContact("tel", contact.phone)}>
+                    <Icon.PhoneCall stroke="black" width={28} height={28} />
+                </Pressable>
 
-                                <Pressable
-                                    style={styles.control}
-                                    onPress={() => communicateWithContact("sms", fc.phone)}>
-                                    <Icon.MessageSquare stroke="black" width={28} height={28} />
-                                </Pressable>
-                            </View>
-                        </View>
-                    )
-                })
-            }
+                <Pressable
+                    style={styles.control}
+                    onPress={() => communicateWithContact("sms", contact.phone)}>
+                    <Icon.MessageSquare stroke="black" width={28} height={28} />
+                </Pressable>
+            </View>
         </View>
     );
 }
