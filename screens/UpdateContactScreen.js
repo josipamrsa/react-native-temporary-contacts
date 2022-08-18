@@ -14,7 +14,7 @@ export default function UpdateContactScreen({ navigation }) {
         const refreshData = navigation.addListener('focus', () => {
             DatabaseConnection.viewContacts(db)
                 .then(res => {
-                    setContacts(res);
+                    setContacts(res.sort((a, b) => a.firstName.localeCompare(b.firstName)));
                 })
                 .catch(err => showToast(err.message, 2.5));
         });
@@ -31,7 +31,28 @@ export default function UpdateContactScreen({ navigation }) {
     }
 
     const updateCurrentContact = (updatedContact) => {
-        console.log("updated");
+        DatabaseConnection.updateContact(db, updatedContact)
+            .then(res => {
+                // TODO - fix this mess... better
+                let [selected, index] = [
+                    contacts.find(x => x.userId === updatedContact.userId),
+                    contacts.findIndex(x => x.userId === updatedContact.userId)];
+
+                let updated = {
+                    ...updatedContact,
+                    keepFor: selected.keepFor,
+                    deletionDate: selected.deletionDate,
+                    temporary: selected.temporary
+                };
+
+                let refreshed = contacts
+                    .filter(contact => contact.userId !== updated.userId)
+                    .concat(updated)
+                    .sort((a, b) => a.firstName.localeCompare(b.firstName));
+                setContacts(refreshed);
+
+            })
+            .catch(err => console.log(err));
     }
 
     const deleteCurrentContact = (uid) => {
@@ -61,7 +82,7 @@ export default function UpdateContactScreen({ navigation }) {
     return (
         <View style={styles.container}>
             {contacts.length > 0 ? <FlatList data={contacts} renderItem={renderContacts} /> : <NoDisplay />}
-        </View> 
+        </View>
     );
 }
 

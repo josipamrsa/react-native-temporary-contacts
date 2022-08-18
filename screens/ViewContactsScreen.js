@@ -36,7 +36,7 @@ export default function ViewContactsScreen({ navigation }) {
   useEffect(() => {
     const refreshData = navigation.addListener('focus', () => {
       DatabaseConnection.viewContacts(db)
-        .then(res => setFullContacts(res))
+        .then(res => setFullContacts(res.sort((a, b) => a.firstName.localeCompare(b.firstName))))
         .catch(err => showToast(err.message, 2.5));
     });
 

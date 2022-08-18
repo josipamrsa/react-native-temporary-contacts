@@ -46,6 +46,13 @@ const VIEW_ALL_TABLE_CONTACT = `SELECT * FROM table_contact`;
 
 const DELETE_CONTACT_FROM_TABLE = `DELETE FROM table_contact WHERE user_id=?`;
 
+const UPDATE_CONTACT_IN_DATABASE = `UPDATE table_contact SET 
+        first_name=?, 
+        last_name=?, 
+        phone=?, 
+        location=?, 
+        description=? WHERE user_id=?`;
+
 // HELPERS //
 
 const errHandler = (err) => {
@@ -165,6 +172,38 @@ const deleteAContact = (db, uid) => {
     });
 }
 
+const updateAContact = (db, data) => { 
+    const {
+        userId,
+        firstName,
+        lastName,
+        phoneNumber,
+        location,
+        description
+    } = data;
+
+    //console.log(userId);
+
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                UPDATE_CONTACT_IN_DATABASE,
+                [firstName, lastName, phoneNumber, location, description, userId],
+                (_, results) => {
+                    /* let tmp = [];
+                    for (let i = 0; i < results.rows.length; i++) {
+                        console.log(results.rows.item(i));
+                        tmp.push(transformKeys(results.rows.item(i)));
+                    }
+                    console.log(tmp[0]); */
+                    resolve(results);
+                },
+                (_, err) => reject(err)
+            );
+        });
+    });
+}
+
 // TODO - ONLY FOR TESTING - DELETE LATER
 
 const dropTableTestable = (db) => {
@@ -198,5 +237,6 @@ export const DatabaseConnection = {
     viewContacts: (db) => viewAllContacts(db),
     addContact: (db, data) => addAContact(db, data),
     deleteContact: (db, uid) => deleteAContact(db, uid),
+    updateContact: (db, data) => updateAContact(db, data),
     dropTableTestable: (db) => dropTableTestable(db)
 }
