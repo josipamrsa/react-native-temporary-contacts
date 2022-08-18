@@ -13,16 +13,6 @@ import { checkIfEmptyFields } from '../utils/Helpers';
 const db = DatabaseConnection.getConnection();
 
 export default function AddContactScreen({ navigation }) {
-    let newContact = {
-        firstName: "Josipa",
-        lastName: "Mrša",
-        phone: "0987654321",
-        keepFor: 7,
-        location: "Split",
-        isTemporary: true,
-        description: "Temporary contact"
-    } //FIXME - test purposes
-
     const {
         sendPushNotification,
         expoPushToken,
@@ -31,9 +21,7 @@ export default function AddContactScreen({ navigation }) {
 
     useEffect(() => {
         const refreshData = navigation.addListener('focus', () => {
-            // FIXME - ONLY FOR TESTING PURPOSES, REFACTOR LATER
-            /* DatabaseConnection.dropTableTestable(db);
-            DatabaseConnection.createContactTable(db); */
+            
         });
 
         return refreshData;
@@ -66,7 +54,6 @@ export default function AddContactScreen({ navigation }) {
             showToast("Contact added!", 2.6);
             //sendPushNotification(expoPushToken, "Contact added!");
         }).catch((err) => {
-            // TODO - err handler on database controller
             showToast(err.message, 2.6);
         });
     }

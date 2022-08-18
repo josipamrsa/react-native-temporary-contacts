@@ -14,8 +14,6 @@ firstName,
 
 */
 
-// TODO - REWORK QUERIES TO INCLUDE ALL PARAMS 
-
 const CREATE_TABLE_CONTACT = `CREATE TABLE IF NOT EXISTS 
     table_contact(
         user_id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -95,8 +93,6 @@ const transformKeys = (obj) => {
 }
 
 // PROCEDURES //
-
-// TODO - find a way to return the error (async?)
 
 const viewAllContacts = (db) => {
     return new Promise((resolve, reject) => {

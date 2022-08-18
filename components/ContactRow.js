@@ -1,21 +1,24 @@
-import React  from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import CustomizableButton from './CustomizableButton';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import * as Icon from 'react-native-feather';
 
 export default function ContactRow({ contact, setIsEdit, deleteContact }) {
     return (
         <View style={styles.update}>
             <Text style={styles.contact} >{contact.firstName} {contact.lastName}</Text>
+            
             <View style={styles.controls}>
-                <CustomizableButton
-                    button={styles.editButton}
-                    description={"Edit"}
-                    action={() => { setIsEdit(true) }} />
+                <Pressable onPress={() => { setIsEdit(true) }}>
+                    <Icon.Edit stroke="#4ba349" style={styles.icon} width={32} height={32} />
+                </Pressable>
 
-                <CustomizableButton
-                    button={styles.deleteButton}
-                    description={"Delete"}
-                    action={() => deleteContact(contact.userId)} />
+                <Pressable onPress={() => deleteContact(contact.userId)}>
+                    <Icon.Trash2 stroke="#ca3d3a" style={styles.icon} width={32} height={32} />
+                </Pressable>
+
+                <Pressable onPress={() => { console.log("prolong deletion period") }}>
+                    <Icon.Clock stroke="#3d94b9" style={styles.icon} width={32} height={32} />
+                </Pressable>
             </View>
         </View>
     );
@@ -26,7 +29,8 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "baseline",
+        alignItems: "center",
+        padding: 10
     },
 
     contact: {
@@ -35,14 +39,10 @@ const styles = StyleSheet.create({
 
     controls: {
         flexDirection: "row",
+        alignItems: "center"
     },
 
-    editButton: {
-        backgroundColor: "lightgreen",
-        marginRight: 4
-    },
-
-    deleteButton: {
-        backgroundColor: "lightsalmon"
-    },
+    icon: {
+        marginRight: 7
+    }
 });

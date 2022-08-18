@@ -1,4 +1,3 @@
-// FIXME - TEST PURPOSES - MOVED HERE
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
@@ -25,7 +24,7 @@ export default function App() {
       <Drawer.Navigator initialRouteName='View contacts'>
         <Drawer.Screen name="View contacts" component={ViewContactScreen} />
         <Drawer.Screen name="Add a contact" component={AddContactScreen} />
-        <Drawer.Screen name="Edit or delete a contact" component={UpdateContactScreen} />
+        <Drawer.Screen name="Manage contacts" component={UpdateContactScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

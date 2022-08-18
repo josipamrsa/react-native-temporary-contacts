@@ -4,6 +4,7 @@ import { StyleSheet, View, Alert, FlatList } from 'react-native';
 import { DatabaseConnection } from '../database/database-connect';
 import UpdateCard from '../components/UpdateCard';
 import NoDisplay from '../components/NoDisplay';
+import InfoButton from '../components/InfoButton';
 
 const db = DatabaseConnection.getConnection();
 
@@ -33,7 +34,6 @@ export default function UpdateContactScreen({ navigation }) {
     const updateCurrentContact = (updatedContact) => {
         DatabaseConnection.updateContact(db, updatedContact)
             .then(res => {
-                // TODO - fix this mess... better
                 let [selected, index] = [
                     contacts.find(x => x.userId === updatedContact.userId),
                     contacts.findIndex(x => x.userId === updatedContact.userId)];
@@ -49,8 +49,8 @@ export default function UpdateContactScreen({ navigation }) {
                     .filter(contact => contact.userId !== updated.userId)
                     .concat(updated)
                     .sort((a, b) => a.firstName.localeCompare(b.firstName));
-                setContacts(refreshed);
 
+                setContacts(refreshed);
             })
             .catch(err => console.log(err));
     }
@@ -79,9 +79,14 @@ export default function UpdateContactScreen({ navigation }) {
         );
     }
 
+    const changeExpiryDate = () => {
+        // TODO
+    }
+
     return (
         <View style={styles.container}>
             {contacts.length > 0 ? <FlatList data={contacts} renderItem={renderContacts} /> : <NoDisplay />}
+            <InfoButton />
         </View>
     );
 }
