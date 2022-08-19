@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Modal, Pressable } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import * as Icon from 'react-native-feather';
 import ContactRow from './ContactRow';
 import UpdateContact from './UpdateContact';
 import ModalWithBackdrop from './ModalWithBackdrop';
 
-export default function UpdateCard({ contact, uid, updateContact, deleteContact }) {
+export default function ManageContactCard({ contact, uid, updateContact, deleteContact }) {
     const [isEdit, setIsEdit] = useState(false);
+    /* const [isDelete, setIsDelete] = useState(false); */
+    const [isProlong, setIsProlong] = useState(false);
+
     return (
         <View key={uid} style={styles.container}>
-            <ContactRow contact={contact} setIsEdit={setIsEdit} deleteContact={deleteContact} />
+            <ContactRow contact={contact} setIsEdit={setIsEdit} setIsProlong={setIsProlong} deleteContact={deleteContact} />
+
             <ModalWithBackdrop isOpen={isEdit} setIsOpen={setIsEdit} header={"Update contact basic data"}>
                 <UpdateContact contact={contact} setIsEdit={setIsEdit} update={updateContact} />
+            </ModalWithBackdrop>
+
+            <ModalWithBackdrop isOpen={isProlong} setIsOpen={setIsProlong} header={"Permanency and expiry period"}>
+                <Text>Change permanency or expiry period</Text>
             </ModalWithBackdrop>
         </View>
     );

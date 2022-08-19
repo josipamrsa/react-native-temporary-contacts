@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
 import ModalWithBackdrop from './ModalWithBackdrop';
 
 export default function ProfileCircle({ firstName, lastName, contact }) {
     const [isDetailView, setIsDetailView] = useState(false);
+
+    let deletionDate = new Date(contact.deletionDate).toLocaleDateString('de-DE');
 
     return (
         <Pressable style={styles.container} onPress={() => { setIsDetailView(!isDetailView) }}>
@@ -36,16 +38,10 @@ export default function ProfileCircle({ firstName, lastName, contact }) {
                         <Text style={styles.rowdata}>{contact.keepFor ? `yes (${contact.keepFor} day/s)` : `no`}</Text>
                     </View>
 
-                    {
-                        contact.keepFor ?
-                            <View>
-                                <Text style={styles.expiry}>{`Expires on ${contact.deletionDate}`}</Text>
-                            </View> :
-                            <View>
-                                <Text style={styles.expiry}>{`No expiration date (permanent contact)`}</Text>
-                            </View>
-                    }
-
+                    <View style={styles.row}>
+                        <Text style={styles.rowname}>Expires: </Text>
+                        <Text style={styles.rowdata}>{contact.keepFor ? deletionDate : 'No expiry date'}</Text>
+                    </View>
                 </View>
             </ModalWithBackdrop>
         </Pressable>
@@ -67,7 +63,7 @@ const styles = StyleSheet.create({
     },
 
     contactDetail: {
-        marginLeft: "20%",
+        marginLeft: "12%",
         marginBottom: 25
     },
 
@@ -96,19 +92,4 @@ const styles = StyleSheet.create({
         color: "gray",
         width: "80%"
     },
-
-    /*  button: {
-         borderRadius: 20,
-         padding: 20,
-         elevation: 2,
-     },
- 
-     buttonClose: {
-         backgroundColor: "lightgray",
-     },
- 
-     buttonCloseText: {
-         color: "white",
-         textTransform: "uppercase"
-     } */
 });

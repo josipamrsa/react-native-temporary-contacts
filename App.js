@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import AddContactScreen from './screens/AddContactScreen';
 import ViewContactScreen from './screens/ViewContactsScreen';
-import UpdateContactScreen from './screens/UpdateContactScreen';
+import ManageContactScreen from './screens/ManageContactScreen';
 
 import useContactTaskManager from './hooks/useContactTaskManager';
 import { CHECK_READY_FOR_DELETION } from './utils/Configuration'
@@ -24,7 +24,7 @@ export default function App() {
       <Drawer.Navigator initialRouteName='View contacts'>
         <Drawer.Screen name="View contacts" component={ViewContactScreen} />
         <Drawer.Screen name="Add a contact" component={AddContactScreen} />
-        <Drawer.Screen name="Manage contacts" component={UpdateContactScreen} />
+        <Drawer.Screen name="Manage contacts" component={ManageContactScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

@@ -23,7 +23,7 @@ export default function InfoButton(props) {
                 </View>
                 <View style={styles.info}>
                     <Icon.Clock stroke="black" />
-                    <Text style={styles.infoText}>Set a new expiry date for this contact</Text>
+                    <Text style={styles.infoText}>Set a new expiry period for this contact</Text>
                 </View>
             </ModalWithBackdrop>
         </View>

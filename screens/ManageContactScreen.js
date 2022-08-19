@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Alert, FlatList, Text } from 'react-native';
 
 import { DatabaseConnection } from '../database/database-connect';
-import UpdateCard from '../components/UpdateCard';
+import ManageContactCard from '../components/ManageContactCard';
 import NoDisplay from '../components/NoDisplay';
 import InfoButton from '../components/InfoButton';
 
@@ -24,7 +24,7 @@ export default function UpdateContactScreen({ navigation }) {
     }, [navigation]);
 
     const renderContacts = ({ item }) => {
-        return <UpdateCard
+        return <ManageContactCard
             key={item.userId}
             contact={item}
             updateContact={updateCurrentContact}

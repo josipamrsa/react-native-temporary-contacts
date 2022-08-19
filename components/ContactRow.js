@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Icon from 'react-native-feather';
 
-export default function ContactRow({ contact, setIsEdit, deleteContact }) {
+export default function ContactRow({ contact, setIsEdit, setIsProlong, deleteContact }) {
     return (
         <View style={styles.update}>
             <Text style={styles.contact} >{contact.firstName} {contact.lastName}</Text>
@@ -16,7 +16,7 @@ export default function ContactRow({ contact, setIsEdit, deleteContact }) {
                     <Icon.Trash2 stroke="#ca3d3a" style={styles.icon} width={32} height={32} />
                 </Pressable>
 
-                <Pressable onPress={() => { console.log("prolong deletion period") }}>
+                <Pressable onPress={() => { setIsProlong(true) }}>
                     <Icon.Clock stroke="#3d94b9" style={styles.icon} width={32} height={32} />
                 </Pressable>
             </View>
