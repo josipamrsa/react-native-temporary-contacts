@@ -56,7 +56,6 @@ export default function EditContactData({ contact, contactAction, btnDescription
             description
         }
         contactAction(newOrUpdatedContact);
-        //clearFields();
     }
 
     return (
@@ -107,17 +106,7 @@ export default function EditContactData({ contact, contactAction, btnDescription
 
 const styles = StyleSheet.create({
     container : {
-        backgroundColor: "white",
-        padding: 30,
-        shadowColor: "gray",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        borderRadius: 10,
+        padding: 20,
     },
 
     button: {
@@ -129,6 +118,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginBottom: "2%",
+        width: 270
     },
 
     temporarySelect: {

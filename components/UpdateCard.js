@@ -3,28 +3,16 @@ import { StyleSheet, View, Modal, Pressable } from 'react-native';
 import * as Icon from 'react-native-feather';
 import ContactRow from './ContactRow';
 import UpdateContact from './UpdateContact';
+import ModalWithBackdrop from './ModalWithBackdrop';
 
 export default function UpdateCard({ contact, uid, updateContact, deleteContact }) {
     const [isEdit, setIsEdit] = useState(false);
     return (
         <View key={uid} style={styles.container}>
             <ContactRow contact={contact} setIsEdit={setIsEdit} deleteContact={deleteContact} />
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isEdit}
-                onRequestClose={() => setIsEdit(!isEdit)}>
-                <View style={styles.modal}>
-                    <UpdateContact contact={contact} setIsEdit={setIsEdit} update={updateContact} />
-                    <View style={styles.buttonContainer}>
-                        <Pressable
-                            style={styles.close}
-                            onPress={() => setIsEdit(!isEdit)}>
-                            <Icon.X stroke={"black"} />
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
+            <ModalWithBackdrop isOpen={isEdit} setIsOpen={setIsEdit} header={"Update contact basic data"}>
+                <UpdateContact contact={contact} setIsEdit={setIsEdit} update={updateContact} />
+            </ModalWithBackdrop>
         </View>
     );
 }
@@ -43,27 +31,5 @@ const styles = StyleSheet.create({
         margin: 4,
         padding: 10,
         borderRadius: 10,
-    },
-
-    modal: {
-        flex: 1,
-        justifyContent: "center",
-        width: "90%",
-        margin: "5%",
-        height: "50%",
-        padding: 20
-    },
-
-    buttonContainer: { 
-        justifyContent: "center" ,
-        alignItems: "center"
-    },
-
-    close: {
-        backgroundColor: "darkgray",
-        padding: 20,
-        marginTop: 10,
-        width: "23%",
-        borderRadius: 50
     },
 });

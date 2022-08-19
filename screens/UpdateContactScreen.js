@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Alert, FlatList } from 'react-native';
+import { StyleSheet, View, Alert, FlatList, Text } from 'react-native';
 
 import { DatabaseConnection } from '../database/database-connect';
 import UpdateCard from '../components/UpdateCard';

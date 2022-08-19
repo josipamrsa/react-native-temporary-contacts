@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Pressable, Modal } from 'react-native';
 import * as Icon from 'react-native-feather';
+import ModalWithBackdrop from './ModalWithBackdrop';
 
 export default function InfoButton(props) {
     const [showHelp, setShowHelp] = useState(false);
@@ -11,30 +12,21 @@ export default function InfoButton(props) {
                 <Icon.HelpCircle stroke="white" width={38} height={38} />
             </Pressable>
 
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={showHelp}
-                onRequestClose={() => setShowHelp(!showHelp)}>
-                <Pressable style={styles.modal} onPress={() => setShowHelp(false)}>
-                    <Text>
-                        <View style={styles.info}>
-                            <Icon.Edit stroke="black" />
-                            <Text>Edit basic contact details (name, phone, description, location)</Text>
-                        </View>
-                        <View style={styles.info}>
-                            <Icon.Trash2 stroke="black" />
-                            <Text>Delete contact from the app itself</Text>
-                        </View>
-                        <View style={styles.info}>
-                            <Icon.Clock stroke="black" />
-                            <Text>Set a new expiry date for this contact</Text>
-                        </View>
-                    </Text>
-                </Pressable>
-            </Modal >
-
-        </View >
+            <ModalWithBackdrop isOpen={showHelp} setIsOpen={setShowHelp} header={"Options information"}>
+                <View style={styles.info}>
+                    <Icon.Edit stroke="black" />
+                    <Text style={styles.infoText}>Edit basic contact details (name, phone, description, location)</Text>
+                </View>
+                <View style={styles.info}>
+                    <Icon.Trash2 stroke="black" />
+                    <Text style={styles.infoText}>Delete contact from the app itself</Text>
+                </View>
+                <View style={styles.info}>
+                    <Icon.Clock stroke="black" />
+                    <Text style={styles.infoText}>Set a new expiry date for this contact</Text>
+                </View>
+            </ModalWithBackdrop>
+        </View>
     );
 }
 
@@ -54,13 +46,19 @@ const styles = StyleSheet.create({
         marginTop: "45%",
         marginLeft: "10%",
         width: "80%",
-        padding: 20,
-        backgroundColor: "white"
+        padding: 30,
+        backgroundColor: "white",
+        borderRadius: 25
     },
 
     info: {
         flexDirection: "row",
-        width: "50%"
+        width: "80%",
+        marginBottom: 10
+    },
+
+    infoText: {
+        marginLeft: 5
     }
 
 });
